@@ -1,4 +1,4 @@
-﻿/**
+/**
 
  Copyright © 2014-2018 basicBot
 
@@ -389,7 +389,7 @@
                     var ind = Math.floor(Math.random() * basicBot.room.roulette.participants.length);
                     var winner = basicBot.room.roulette.participants[ind];
                     basicBot.room.roulette.participants = [];
-                    var pos =  1;
+                    var pos = Math.floor(1);
                     var user = basicBot.userUtilities.lookupUser(winner);
                     var name = user.username;
                     API.sendChat(subChat(basicBot.chat.winnerpicked, {
