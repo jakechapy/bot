@@ -112,7 +112,7 @@
 
     var loadChat = function(cb) {
         if (!cb) cb = function() {};
-        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
+        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
             var link = basicBot.chatLink;
             if (json !== null && typeof json !== 'undefined') {
                 langIndex = json;
@@ -245,7 +245,7 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: '2.1.1',
+        version: 'boob',
         status: false,
         name: 'basicBot',
         loggedInID: null,
@@ -383,7 +383,7 @@
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
                  
-                 API.sendChat("@djs test ");
+                 API.sendChat(basicBot.chat.djs);
                     
                     
                 },
@@ -2747,7 +2747,7 @@
                         }));
                         var argument = msg.substring(cmd.length + 1);
 
-                        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
+                        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
                             var langIndex = json;
                             var link = langIndex[argument.toLowerCase()];
                             if (typeof link === 'undefined') {
