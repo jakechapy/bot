@@ -245,7 +245,7 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: 'boob',
+        version: ' boobies',
         status: false,
         name: 'basicBot',
         loggedInID: null,
@@ -383,7 +383,7 @@
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
                  
-                 API.sendChat(basicBot.chat.djs);
+                 API.sendChat(basicBot.chat.isopen);
                     
                     
                 },
