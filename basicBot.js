@@ -112,7 +112,7 @@
 
     var loadChat = function(cb) {
         if (!cb) cb = function() {};
-        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
+        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
             var link = basicBot.chatLink;
             if (json !== null && typeof json !== 'undefined') {
                 langIndex = json;
@@ -245,13 +245,13 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: ' boobies',
+        version: 'boobies 2.0',
         status: false,
         name: 'basicBot',
         loggedInID: null,
         scriptLink: 'https://raw.githack.com/basicBot/source/master/basicBot.js',
         cmdLink: 'http://git.io/245Ppg',
-        chatLink: 'https://raw.githack.com/jakechapy/bot/master/lang/en.json',
+        chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
         chat: null,
         loadChat: loadChat,
         retrieveSettings: retrieveSettings,
@@ -259,7 +259,7 @@
         settings: {
             botName: 'basicBot',
             language: 'english',
-            chatLink: 'https://raw.githack.com/jakechapy/bot/master/lang/en.json',
+            chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
             scriptLink: 'https://raw.githack.com/basicBot/source/master/basicBot.js',
             roomLock: false, // Requires an extension to re-load the script
             startupCap: 1, // 1-200
@@ -382,17 +382,17 @@
                     basicBot.room.roulette.countdown = setTimeout(function() {
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
-                 
-                 API.sendChat(basicBot.chat.isopen);
+                    API.sendChat("@djs");
+                    API.sendChat("raffle time type join for a spot at #1");
                     
-                    
+                
                 },
                 endRoulette: function() {
                     basicBot.room.roulette.rouletteStatus = false;
                     var ind = Math.floor(Math.random() * basicBot.room.roulette.participants.length);
                     var winner = basicBot.room.roulette.participants[ind];
                     basicBot.room.roulette.participants = [];
-                    var pos = Math.floor(1);
+                    var pos = Math.floor((Math.random() * API.getWaitList().length) + 1);
                     var user = basicBot.userUtilities.lookupUser(winner);
                     var name = user.username;
                     API.sendChat(subChat(basicBot.chat.winnerpicked, {
@@ -2747,7 +2747,7 @@
                         }));
                         var argument = msg.substring(cmd.length + 1);
 
-                        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
+                        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
                             var langIndex = json;
                             var link = langIndex[argument.toLowerCase()];
                             if (typeof link === 'undefined') {
