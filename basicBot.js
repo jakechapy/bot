@@ -373,22 +373,22 @@
             },
             newBlacklisted: [],
             newBlacklistedSongFunction: null,
-            raffle: {
-                raffleStatus: false,
+            roulette: {
+                rouletteStatus: false,
                 participants: [],
                 countdown: null,
-                startraffle: function() {
-                    basicBot.room.raffle.raffleStatus = true;
-                    basicBot.room.raffle.countdown = setTimeout(function() {
-                        basicBot.room.raffle.endraffle();
+                startRoulette: function() {
+                    basicBot.room.roulette.rouletteStatus = true;
+                    basicBot.room.roulette.countdown = setTimeout(function() {
+                        basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
                     API.sendChat(basicBot.chat.isopen);
                 },
-                endraffle: function() {
-                    basicBot.room.raffle.raffleStatus = false;
-                    var ind = Math.floor(Math.random() * basicBot.room.raffle.participants.length);
-                    var winner = basicBot.room.raffle.participants[ind];
-                    basicBot.room.raffle.participants = [];
+                endRoulette: function() {
+                    basicBot.room.roulette.rouletteStatus = false;
+                    var ind = Math.floor(Math.random() * basicBot.room.roulette.participants.length);
+                    var winner = basicBot.room.roulette.participants[ind];
+                    basicBot.room.roulette.participants = [];
                     var pos = Math.floor((Math.random() * API.getWaitList().length) + 1);
                     var user = basicBot.userUtilities.lookupUser(winner);
                     var name = user.username;
@@ -1257,18 +1257,18 @@
                     return true;
                 }
 
-                var rlJoinChat = basicBot.chat.rafflejoin;
-                var rlLeaveChat = basicBot.chat.raffleleave;
+                var rlJoinChat = basicBot.chat.roulettejoin;
+                var rlLeaveChat = basicBot.chat.rouletteleave;
 
-                var joinedraffle = rlJoinChat.split('%%NAME%%');
-                if (joinedraffle[1].length > joinedraffle[0].length) joinedraffle = joinedraffle[1];
-                else joinedraffle = joinedraffle[0];
+                var joinedroulette = rlJoinChat.split('%%NAME%%');
+                if (joinedroulette[1].length > joinedroulette[0].length) joinedroulette = joinedroulette[1];
+                else joinedroulette = joinedroulette[0];
 
-                var leftraffle = rlLeaveChat.split('%%NAME%%');
-                if (leftraffle[1].length > leftraffle[0].length) leftraffle = leftraffle[1];
-                else leftraffle = leftraffle[0];
+                var leftroulette = rlLeaveChat.split('%%NAME%%');
+                if (leftroulette[1].length > leftroulette[0].length) leftroulette = leftroulette[1];
+                else leftroulette = leftroulette[0];
 
-                if ((msg.indexOf(joinedraffle) > -1 || msg.indexOf(leftraffle) > -1) && chat.uid === basicBot.loggedInID) {
+                if ((msg.indexOf(joinedroulette) > -1 || msg.indexOf(leftroulette) > -1) && chat.uid === basicBot.loggedInID) {
                     setTimeout(function(id) {
                         API.moderateDeleteChat(id);
                     }, 5 * 1000, chat.cid);
@@ -2619,9 +2619,9 @@
                     if (this.type === 'exact' && chat.message.length !== cmd.length) return void(0);
                     if (!basicBot.commands.executable(this.rank, chat)) return void(0);
                     else {
-                        if (basicBot.room.raffle.raffleStatus && basicBot.room.raffle.participants.indexOf(chat.uid) < 0) {
-                            basicBot.room.raffle.participants.push(chat.uid);
-                            API.sendChat(subChat(basicBot.chat.rafflejoin, {
+                        if (basicBot.room.roulette.rouletteStatus && basicBot.room.roulette.participants.indexOf(chat.uid) < 0) {
+                            basicBot.room.roulette.participants.push(chat.uid);
+                            API.sendChat(subChat(basicBot.chat.roulettejoin, {
                                 name: chat.un
                             }));
                         }
@@ -2771,10 +2771,10 @@
                     if (this.type === 'exact' && chat.message.length !== cmd.length) return void(0);
                     if (!basicBot.commands.executable(this.rank, chat)) return void(0);
                     else {
-                        var ind = basicBot.room.raffle.participants.indexOf(chat.uid);
+                        var ind = basicBot.room.roulette.participants.indexOf(chat.uid);
                         if (ind > -1) {
-                            basicBot.room.raffle.participants.splice(ind, 1);
-                            API.sendChat(subChat(basicBot.chat.raffleleave, {
+                            basicBot.room.roulette.participants.splice(ind, 1);
+                            API.sendChat(subChat(basicBot.chat.rouletteleave, {
                                 name: chat.un
                             }));
                         }
@@ -3303,16 +3303,16 @@
                 }
             },
 
-            raffleCommand: {
-                command: 'raffle',
+            rouletteCommand: {
+                command: 'roulette',
                 rank: 'mod',
                 type: 'exact',
                 functionality: function(chat, cmd) {
                     if (this.type === 'exact' && chat.message.length !== cmd.length) return void(0);
                     if (!basicBot.commands.executable(this.rank, chat)) return void(0);
                     else {
-                        if (!basicBot.room.raffle.raffleStatus) {
-                            basicBot.room.raffle.startraffle();
+                        if (!basicBot.room.roulette.rouletteStatus) {
+                            basicBot.room.roulette.startRoulette();
                         }
                     }
                 }
