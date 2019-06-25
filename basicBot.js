@@ -245,7 +245,7 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: 'boobies 2.0',
+        version: 'what',
         status: false,
         name: 'basicBot',
         loggedInID: null,
@@ -382,7 +382,7 @@
                     basicBot.room.roulette.countdown = setTimeout(function() {
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
-                    API.sendChat("@djs raffle time type join for a spot at #1");
+                    API.sendChat(basicBot.chat.isopen + "@djs");
                     
                     
                 
