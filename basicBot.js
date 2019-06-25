@@ -382,6 +382,7 @@
                     basicBot.room.roulette.countdown = setTimeout(function() {
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
+                     API.sendChat(basicBot.chat.djs);
                     API.sendChat(basicBot.chat.isopen);
                     
                     
@@ -395,14 +396,6 @@
                     var pos = Math.floor(1);
                     var user = basicBot.userUtilities.lookupUser(winner);
                     var name = user.username;
-                    
-                    if ( name == undefined) {
-                      
-                      API.sendChat("you done goofed");
-                      
-                    }
-                        
-                        else  {
                     API.sendChat(subChat(basicBot.chat.winnerpicked, {
                         name: name,
                         position: pos
@@ -410,7 +403,6 @@
                     setTimeout(function(winner, pos) {
                         basicBot.userUtilities.moveUser(winner, pos, false);
                     }, 1 * 1000, winner, pos);
-                }
                 }
             },
             usersUsedThor: []
