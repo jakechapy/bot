@@ -245,7 +245,7 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: '1',
+        version: '2',
         status: false,
         name: '',
         loggedInID: null,
@@ -382,8 +382,8 @@
                     basicBot.room.roulette.countdown = setTimeout(function() {
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
-                     API.sendChat(basicBot.chat.djs);
-                     setTimeout(API.sendChat(basicBot.chat.isopen),2000);
+                     
+                     API.sendChat(basicBot.chat.isopen);
                    ;
                     
                     
