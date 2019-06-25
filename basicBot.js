@@ -383,7 +383,8 @@
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
                      API.sendChat(basicBot.chat.djs);
-                    API.sendChat(basicBot.chat.isopen);
+                     setTimeout(API.sendChat(basicBot.chat.isopen),1000);
+                   ;
                     
                     
                 
