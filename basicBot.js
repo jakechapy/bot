@@ -245,9 +245,9 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: 'fixed',
+        version: '',
         status: false,
-        name: 'basicBot',
+        name: '',
         loggedInID: null,
         scriptLink: 'https://raw.githack.com/jakechapy/bot/master/basicBot.js',
         cmdLink: 'http://git.io/245Ppg',
