@@ -382,8 +382,8 @@
                     basicBot.room.roulette.countdown = setTimeout(function() {
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
-                    API.sendChat("@djs");
-                    API.sendChat("raffle time type join for a spot at #1");
+                    API.sendChat("@djs raffle time type join for a spot at #1");
+                    
                     
                 
                 },
