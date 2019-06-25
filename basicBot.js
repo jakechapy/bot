@@ -245,7 +245,7 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: '',
+        version: '1',
         status: false,
         name: '',
         loggedInID: null,
@@ -257,7 +257,7 @@
         retrieveSettings: retrieveSettings,
         retrieveFromStorage: retrieveFromStorage,
         settings: {
-            botName: 'basicBot',
+            botName: '',
             language: 'english',
             chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
             scriptLink: 'https://raw.githack.com/jakechapy/bot/master/basicBot.js',
@@ -383,7 +383,7 @@
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
                      API.sendChat(basicBot.chat.djs);
-                     setTimeout(API.sendChat(basicBot.chat.isopen),1000);
+                     setTimeout(API.sendChat(basicBot.chat.isopen),2000);
                    ;
                     
                     
