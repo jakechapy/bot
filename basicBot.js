@@ -112,7 +112,7 @@
 
     var loadChat = function(cb) {
         if (!cb) cb = function() {};
-        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
+        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
             var link = basicBot.chatLink;
             if (json !== null && typeof json !== 'undefined') {
                 langIndex = json;
@@ -245,22 +245,22 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: '2',
+        version: '2.12.3',
         status: false,
-        name: '',
+        name: 'basicBot',
         loggedInID: null,
-        scriptLink: 'https://raw.githack.com/jakechapy/bot/master/basicBot.js',
+        scriptLink: 'https://raw.githack.com/basicBot/source/master/basicBot.js',
         cmdLink: 'http://git.io/245Ppg',
-        chatLink: 'https://raw.githack.com/jakechapy/bot/master/lang/en.json',
+        chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
         chat: null,
         loadChat: loadChat,
         retrieveSettings: retrieveSettings,
         retrieveFromStorage: retrieveFromStorage,
         settings: {
-            botName: '',
+            botName: 'basicBot',
             language: 'english',
             chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
-            scriptLink: 'https://raw.githack.com/jakechapy/bot/master/basicBot.js',
+            scriptLink: 'https://raw.githack.com/basicBot/source/master/basicBot.js',
             roomLock: false, // Requires an extension to re-load the script
             startupCap: 1, // 1-200
             startupVolume: 0, // 0-100
@@ -373,28 +373,23 @@
             },
             newBlacklisted: [],
             newBlacklistedSongFunction: null,
-            roulette: {
-                rouletteStatus: false,
+            raffle: {
+                raffleStatus: false,
                 participants: [],
                 countdown: null,
-                startRoulette: function() {
-                    basicBot.room.roulette.rouletteStatus = true;
-                    basicBot.room.roulette.countdown = setTimeout(function() {
-                        basicBot.room.roulette.endRoulette();
+                startraffle: function() {
+                    basicBot.room.raffle.raffleStatus = true;
+                    basicBot.room.raffle.countdown = setTimeout(function() {
+                        basicBot.room.raffle.endraffle();
                     }, 60 * 1000);
-                     
-                     API.sendChat(basicBot.chat.isopen);
-                   ;
-                    
-                    
-                
+                    API.sendChat(basicBot.chat.isopen);
                 },
-                endRoulette: function() {
-                    basicBot.room.roulette.rouletteStatus = false;
-                    var ind = Math.floor(Math.random() * basicBot.room.roulette.participants.length);
-                    var winner = basicBot.room.roulette.participants[ind];
-                    basicBot.room.roulette.participants = [];
-                    var pos = Math.floor(1);
+                endraffle: function() {
+                    basicBot.room.raffle.raffleStatus = false;
+                    var ind = Math.floor(Math.random() * basicBot.room.raffle.participants.length);
+                    var winner = basicBot.room.raffle.participants[ind];
+                    basicBot.room.raffle.participants = [];
+                    var pos = Math.floor((Math.random() * API.getWaitList().length) + 1);
                     var user = basicBot.userUtilities.lookupUser(winner);
                     var name = user.username;
                     API.sendChat(subChat(basicBot.chat.winnerpicked, {
@@ -1262,18 +1257,18 @@
                     return true;
                 }
 
-                var rlJoinChat = basicBot.chat.roulettejoin;
-                var rlLeaveChat = basicBot.chat.rouletteleave;
+                var rlJoinChat = basicBot.chat.rafflejoin;
+                var rlLeaveChat = basicBot.chat.raffleleave;
 
-                var joinedroulette = rlJoinChat.split('%%NAME%%');
-                if (joinedroulette[1].length > joinedroulette[0].length) joinedroulette = joinedroulette[1];
-                else joinedroulette = joinedroulette[0];
+                var joinedraffle = rlJoinChat.split('%%NAME%%');
+                if (joinedraffle[1].length > joinedraffle[0].length) joinedraffle = joinedraffle[1];
+                else joinedraffle = joinedraffle[0];
 
-                var leftroulette = rlLeaveChat.split('%%NAME%%');
-                if (leftroulette[1].length > leftroulette[0].length) leftroulette = leftroulette[1];
-                else leftroulette = leftroulette[0];
+                var leftraffle = rlLeaveChat.split('%%NAME%%');
+                if (leftraffle[1].length > leftraffle[0].length) leftraffle = leftraffle[1];
+                else leftraffle = leftraffle[0];
 
-                if ((msg.indexOf(joinedroulette) > -1 || msg.indexOf(leftroulette) > -1) && chat.uid === basicBot.loggedInID) {
+                if ((msg.indexOf(joinedraffle) > -1 || msg.indexOf(leftraffle) > -1) && chat.uid === basicBot.loggedInID) {
                     setTimeout(function(id) {
                         API.moderateDeleteChat(id);
                     }, 5 * 1000, chat.cid);
@@ -2624,9 +2619,9 @@
                     if (this.type === 'exact' && chat.message.length !== cmd.length) return void(0);
                     if (!basicBot.commands.executable(this.rank, chat)) return void(0);
                     else {
-                        if (basicBot.room.roulette.rouletteStatus && basicBot.room.roulette.participants.indexOf(chat.uid) < 0) {
-                            basicBot.room.roulette.participants.push(chat.uid);
-                            API.sendChat(subChat(basicBot.chat.roulettejoin, {
+                        if (basicBot.room.raffle.raffleStatus && basicBot.room.raffle.participants.indexOf(chat.uid) < 0) {
+                            basicBot.room.raffle.participants.push(chat.uid);
+                            API.sendChat(subChat(basicBot.chat.rafflejoin, {
                                 name: chat.un
                             }));
                         }
@@ -2749,7 +2744,7 @@
                         }));
                         var argument = msg.substring(cmd.length + 1);
 
-                        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
+                        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
                             var langIndex = json;
                             var link = langIndex[argument.toLowerCase()];
                             if (typeof link === 'undefined') {
@@ -2776,10 +2771,10 @@
                     if (this.type === 'exact' && chat.message.length !== cmd.length) return void(0);
                     if (!basicBot.commands.executable(this.rank, chat)) return void(0);
                     else {
-                        var ind = basicBot.room.roulette.participants.indexOf(chat.uid);
+                        var ind = basicBot.room.raffle.participants.indexOf(chat.uid);
                         if (ind > -1) {
-                            basicBot.room.roulette.participants.splice(ind, 1);
-                            API.sendChat(subChat(basicBot.chat.rouletteleave, {
+                            basicBot.room.raffle.participants.splice(ind, 1);
+                            API.sendChat(subChat(basicBot.chat.raffleleave, {
                                 name: chat.un
                             }));
                         }
@@ -3308,16 +3303,16 @@
                 }
             },
 
-            rouletteCommand: {
-                command: 'roulette',
+            raffleCommand: {
+                command: 'raffle',
                 rank: 'mod',
                 type: 'exact',
                 functionality: function(chat, cmd) {
                     if (this.type === 'exact' && chat.message.length !== cmd.length) return void(0);
                     if (!basicBot.commands.executable(this.rank, chat)) return void(0);
                     else {
-                        if (!basicBot.room.roulette.rouletteStatus) {
-                            basicBot.room.roulette.startRoulette();
+                        if (!basicBot.room.raffle.raffleStatus) {
+                            basicBot.room.raffle.startraffle();
                         }
                     }
                 }
