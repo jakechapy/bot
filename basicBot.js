@@ -251,7 +251,7 @@
         loggedInID: null,
         scriptLink: 'https://raw.githack.com/basicBot/source/master/basicBot.js',
         cmdLink: 'http://git.io/245Ppg',
-        chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
+        chatLink: 'https://raw.githack.com/jakechapy/bot/master/lang/en.json',
         chat: null,
         loadChat: loadChat,
         retrieveSettings: retrieveSettings,
