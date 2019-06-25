@@ -112,7 +112,7 @@
 
     var loadChat = function(cb) {
         if (!cb) cb = function() {};
-        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
+        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
             var link = basicBot.chatLink;
             if (json !== null && typeof json !== 'undefined') {
                 langIndex = json;
@@ -245,11 +245,11 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: '2.12.3',
+        version: 'test',
         status: false,
         name: 'basicBot',
         loggedInID: null,
-        scriptLink: 'https://raw.githack.com/basicBot/source/master/basicBot.js',
+        scriptLink: 'https://raw.githack.com/jakechapy/bot/master/basicBot.js',
         cmdLink: 'http://git.io/245Ppg',
         chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
         chat: null,
@@ -259,8 +259,8 @@
         settings: {
             botName: 'basicBot',
             language: 'english',
-            chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
-            scriptLink: 'https://raw.githack.com/basicBot/source/master/basicBot.js',
+            chatLink: 'https://raw.githack.com/jakechapy/bot/master/lang/en.json',
+            scriptLink: 'https://raw.githack.com/jakechapy/bot/master/basicBot.js',
             roomLock: false, // Requires an extension to re-load the script
             startupCap: 1, // 1-200
             startupVolume: 0, // 0-100
@@ -2744,7 +2744,7 @@
                         }));
                         var argument = msg.substring(cmd.length + 1);
 
-                        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
+                        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
                             var langIndex = json;
                             var link = langIndex[argument.toLowerCase()];
                             if (typeof link === 'undefined') {
