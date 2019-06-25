@@ -382,8 +382,8 @@
                     basicBot.room.roulette.countdown = setTimeout(function() {
                         basicBot.room.roulette.endRoulette();
                     }, 60 * 1000);
-                    API.sendChat("@djs");
-                    API.sendChat("test");
+                    API.sendChat("@djs lol");
+                    
                 },
                 endRoulette: function() {
                     basicBot.room.roulette.rouletteStatus = false;
