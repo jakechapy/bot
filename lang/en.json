@@ -72,7 +72,7 @@
     "permissionownsong": "\/me :up: @%%NAME%% has permission to play their own production!",
     "isblacklisted": "\/me This track is on the %%BLACKLIST%% blacklist! Skipping...",
     "djs": "@djs ",
-    "isopen": "\/me The roulette is now open! Type !join to participate! (A game where a random participant is moved to first position in the waitlist)",
+    "isopen": "\/me @djs The roulette is now open! Type !join to participate! (A game where a random participant is moved to first position in the waitlist)",
     "winnerpicked": "\/me A winner has been picked! @%%NAME%% to position %%POSITION%%.",
     "ball": "\/me %%NAME%%'s question was: \"%%QUESTION%%\" and %%BOTNAME%%'s response is: \"%%RESPONSE%%\"",
     "notghosting": "[%%NAME1%%] %%NAME2%% is not ghosting.",
