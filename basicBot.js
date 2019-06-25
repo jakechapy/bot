@@ -3304,7 +3304,7 @@
             },
 
             rouletteCommand: {
-                command: 'roulette',
+                command: 'raffle',
                 rank: 'mod',
                 type: 'exact',
                 functionality: function(chat, cmd) {
