@@ -1229,11 +1229,11 @@
                     }
                 }
                 if (basicBot.chatcleaner(chat)) {
-
+                    API.moderateDeleteChat(chat.cid);
                     return true;
                 }
                 if (basicBot.settings.cmdDeletion && msg.startsWith(basicBot.settings.commandLiteral)) {
-                    API.moderateDeleteChat(chat.cid);
+                    
                 }
                 /**
                  var plugRoomLinkPatt = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
