@@ -112,7 +112,7 @@
 
     var loadChat = function(cb) {
         if (!cb) cb = function() {};
-        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
+        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
             var link = basicBot.chatLink;
             if (json !== null && typeof json !== 'undefined') {
                 langIndex = json;
@@ -245,11 +245,11 @@
     var botCreatorIDs = [3851534, 4105209];
 
     var basicBot = {
-        version: 'test',
+        version: '2.12.3',
         status: false,
         name: 'basicBot',
         loggedInID: null,
-        scriptLink: 'https://raw.githack.com/jakechapy/bot/master/basicBot.js',
+        scriptLink: 'https://raw.githack.com/basicBot/source/master/basicBot.js',
         cmdLink: 'http://git.io/245Ppg',
         chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
         chat: null,
@@ -259,8 +259,8 @@
         settings: {
             botName: 'basicBot',
             language: 'english',
-            chatLink: 'https://raw.githack.com/jakechapy/bot/master/lang/en.json',
-            scriptLink: 'https://raw.githack.com/jakechapy/bot/master/basicBot.js',
+            chatLink: 'https://raw.githack.com/basicBot/source/master/lang/en.json',
+            scriptLink: 'https://raw.githack.com/basicBot/source/master/basicBot.js',
             roomLock: false, // Requires an extension to re-load the script
             startupCap: 1, // 1-200
             startupVolume: 0, // 0-100
@@ -305,7 +305,7 @@
             motdEnabled: false,
             motdInterval: 5,
             motd: 'Temporary Message of the Day',
-            filterChat: true,
+            filterChat: false,
             etaRestriction: false,
             welcome: true,
             opLink: null,
@@ -389,7 +389,7 @@
                     var ind = Math.floor(Math.random() * basicBot.room.roulette.participants.length);
                     var winner = basicBot.room.roulette.participants[ind];
                     basicBot.room.roulette.participants = [];
-                    var pos = Math.floor(1);
+                    var pos = Math.floor((Math.random() * API.getWaitList().length) + 1);
                     var user = basicBot.userUtilities.lookupUser(winner);
                     var name = user.username;
                     API.sendChat(subChat(basicBot.chat.winnerpicked, {
@@ -1500,7 +1500,10 @@
             API.chatLog('Avatars capped at ' + basicBot.settings.startupCap);
             API.chatLog('Volume set to ' + basicBot.settings.startupVolume);
             //socket();
-            loadChat();
+            loadChat(API.sendChat(subChat(basicBot.chat.online, {
+                botname: basicBot.settings.botName,
+                version: basicBot.version
+            })));
         },
         commands: {
             executable: function(minRank, chat) {
@@ -2741,7 +2744,7 @@
                         }));
                         var argument = msg.substring(cmd.length + 1);
 
-                        $.get('https://raw.githack.com/jakechapy/bot/master/lang/langIndex.json', function(json) {
+                        $.get('https://raw.githack.com/basicBot/source/master/lang/langIndex.json', function(json) {
                             var langIndex = json;
                             var link = langIndex[argument.toLowerCase()];
                             if (typeof link === 'undefined') {
@@ -3301,7 +3304,7 @@
             },
 
             rouletteCommand: {
-                command: 'raffle',
+                command: 'roulette',
                 rank: 'mod',
                 type: 'exact',
                 functionality: function(chat, cmd) {
