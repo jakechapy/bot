@@ -1500,10 +1500,7 @@
             API.chatLog('Avatars capped at ' + basicBot.settings.startupCap);
             API.chatLog('Volume set to ' + basicBot.settings.startupVolume);
             //socket();
-            loadChat(API.sendChat(subChat(basicBot.chat.online, {
-                botname: basicBot.settings.botName,
-                version: basicBot.version
-            })));
+            loadChat();
         },
         commands: {
             executable: function(minRank, chat) {
