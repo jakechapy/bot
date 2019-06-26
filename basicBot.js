@@ -165,7 +165,7 @@
                     basicBot.settings[prop] = settings[prop];
                 }
                 basicBot.room.users = room.users;
-                
+                basicBot.room.afkList = room.afkList;
                 basicBot.room.historyList = room.historyList;
                 basicBot.room.mutedUsers = room.mutedUsers;
                 //basicBot.room.autoskip = room.autoskip;
@@ -269,7 +269,7 @@
             autoskip: false,
             smartSkip: true,
             cmdDeletion: true,
-            maximumAfk: 1000,
+            maximumAfk: 12000,
             afkRemoval: false,
             maximumDc: 60,
             bouncerPlus: true,
@@ -300,7 +300,7 @@
                 ['nsfw', 'The song you contained was NSFW (image or sound). '],
                 ['unavailable', 'The song you played was not available for some users. ']
             ],
-           
+            afkpositionCheck: 15,
             afkRankCheck: 'ambassador',
             motdEnabled: false,
             motdInterval: 5,
@@ -328,13 +328,13 @@
             name: null,
             chatMessages: [],
             users: [],
-            
+            afkList: [],
             mutedUsers: [],
             bannedUsers: [],
             skippable: true,
             usercommand: true,
             allcommand: true,
-            
+            afkInterval: null,
             //autoskip: false,
             autoskipTimer: null,
             autodisableInterval: null,
@@ -414,8 +414,8 @@
                 curate: 0
             };
             this.lastEta = null;
-           
-            
+            this.afkWarningCount = 0;
+            this.afkCountdown = null;
             this.inRoom = true;
             this.isMuted = false;
             this.lastDC = {
@@ -442,15 +442,18 @@
             },
             setLastActivity: function(user) {
                 user.lastActivity = Date.now();
-                
+                user.afkWarningCount = 0;
                 clearTimeout(user.afkCountdown);
             },
             getLastActivity: function(user) {
                 return user.lastActivity;
             },
-            
-               
-            
+            getWarningCount: function(user) {
+                return user.afkWarningCount;
+            },
+            setWarningCount: function(user, value) {
+                user.afkWarningCount = value;
+            },
             lookupUser: function(id) {
                 for (var i = 0; i < basicBot.room.users.length; i++) {
                     if (basicBot.room.users[i].id === id) {
@@ -550,9 +553,14 @@
                     time: time
                 }));
                 var songsPassed = basicBot.room.roomstats.songCount - user.lastDC.songCount;
-                
-               
-               
+                var afksRemoved = 0;
+                var afkList = basicBot.room.afkList;
+                for (var i = 0; i < afkList.length; i++) {
+                    var timeAfk = afkList[i][1];
+                    var posAfk = afkList[i][2];
+                    if (dc < timeAfk && posAfk < pos) {
+                        afksRemoved++;
+                    }
                 }
                 var newPosition = user.lastDC.position - songsPassed - afksRemoved;
                 if (newPosition <= 0) return subChat(basicBot.chat.notdisconnected, {
@@ -664,22 +672,62 @@
                     clearTimeout(basicBot.roomUtilities.booth.lockTimer);
                 }
             },
-            
-                {
+            afkCheck: function() {
+                if (!basicBot.status || !basicBot.settings.afkRemoval) return void(0);
+                var rank = basicBot.roomUtilities.rankToNumber(basicBot.settings.afkRankCheck);
+                var djlist = API.getWaitList();
+                var lastPos = Math.min(djlist.length, basicBot.settings.afkpositionCheck);
+                if (lastPos - 1 > djlist.length) return void(0);
+                for (var i = 0; i < lastPos; i++) {
+                    if (typeof djlist[i] !== 'undefined') {
+                        var id = djlist[i].id;
+                        var user = basicBot.userUtilities.lookupUser(id);
+                        if (typeof user !== 'boolean') {
+                            var plugUser = basicBot.userUtilities.getUser(user);
+                            if (rank !== null && basicBot.userUtilities.getPermission(plugUser) <= rank) {
+                                var name = plugUser.username;
+                                var lastActive = basicBot.userUtilities.getLastActivity(user);
+                                var inactivity = Date.now() - lastActive;
+                                var time = basicBot.roomUtilities.msToStr(inactivity);
+                                var warncount = user.afkWarningCount;
+                                if (inactivity > basicBot.settings.maximumAfk * 60 * 1000) {
+                                    if (warncount === 1000000) {
+                                        API.sendChat(subChat(basicBot.chat.warning1, {
+                                            name: name,
+                                            time: time
+                                        }));
+                                        user.afkWarningCount = 3;
+                                        user.afkCountdown = setTimeout(function(userToChange) {
+                                            userToChange.afkWarningCount = 1;
+                                        }, 90 * 1000, user);
+                                    } else if (warncount === 1) {
+                                        API.sendChat(subChat(basicBot.chat.warning2, {
+                                            name: name
+                                        }));
+                                        user.afkWarningCount = 3;
+                                        user.afkCountdown = setTimeout(function(userToChange) {
+                                            userToChange.afkWarningCount = 2;
+                                        }, 30 * 1000, user);
+                                    } else if (warncount === 10000) {
                                         var pos = API.getWaitListPosition(id);
                                         if (pos !== -1) {
                                             pos++;
-                                            
+                                            basicBot.room.afkList.push([id, Date.now(), pos]);
                                             user.lastDC = {
 
                                                 time: null,
                                                 position: null,
                                                 songCount: 0
                                             };
-                                            
-                                            
+                                            API.moderateRemoveDJ(id);
+                                            API.sendChat(subChat(basicBot.chat.afkremove, {
+                                                name: name,
+                                                time: time,
+                                                position: pos,
+                                                maximumafk: basicBot.settings.maximumAfk
+                                            }));
                                         }
-                                        
+                                        user.afkWarningCount = 0;
                                     }
                                 }
                             }
@@ -1423,7 +1471,9 @@
                 var wlIndex = API.getWaitListPosition(basicBot.room.users[ind].id) + 1;
                 basicBot.userUtilities.updatePosition(basicBot.room.users[ind], wlIndex);
             }
-           
+            basicBot.room.afkInterval = setInterval(function() {
+                basicBot.roomUtilities.afkCheck()
+            }, 10 * 1000);
             basicBot.room.autodisableInterval = setInterval(function() {
                 basicBot.room.autodisableFunc();
             }, 60 * 60 * 1000);
@@ -1604,7 +1654,34 @@
                 }
             },
 
-            
+            afkremovalCommand: {
+                command: 'afkremoval',
+                rank: 'mod',
+                type: 'exact',
+                functionality: function(chat, cmd) {
+                    if (this.type === 'exact' && chat.message.length !== cmd.length) return void(0);
+                    if (!basicBot.commands.executable(this.rank, chat)) return void(0);
+                    else {
+                        if (basicBot.settings.afkRemoval) {
+                            basicBot.settings.afkRemoval = !basicBot.settings.afkRemoval;
+                            clearInterval(basicBot.room.afkInterval);
+                            API.sendChat(subChat(basicBot.chat.toggleoff, {
+                                name: chat.un,
+                                'function': basicBot.chat.afkremoval
+                            }));
+                        } else {
+                            basicBot.settings.afkRemoval = !basicBot.settings.afkRemoval;
+                            basicBot.room.afkInterval = setInterval(function() {
+                                basicBot.roomUtilities.afkCheck()
+                            }, 2 * 1000);
+                            API.sendChat(subChat(basicBot.chat.toggleon, {
+                                name: chat.un,
+                                'function': basicBot.chat.afkremoval
+                            }));
+                        }
+                    }
+                }
+            },
 
             afkresetCommand: {
                 command: 'afkreset',
@@ -3246,7 +3323,7 @@
                     if (this.type === 'exact' && chat.message.length !== cmd.length) return void(0);
                     if (!basicBot.commands.executable(this.rank, chat)) return void(0);
                     else {
-                        if (typeof basicBot.settings.rulesLink === 'Ambient, Drum & Bass, House, Chillout, Electronica SUBGENRES: deep house, drum and bass, chillhop, ambient psychill, psychill, chillstep, ambient idm, downtempo, chill lounge, chillwave')
+                        if (typeof basicBot.settings.rulesLink === 'string')
                             return API.sendChat(subChat(basicBot.chat.roomrules, {
                                 link: basicBot.settings.rulesLink
                             }));
