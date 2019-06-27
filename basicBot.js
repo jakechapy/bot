@@ -305,6 +305,7 @@
             motdEnabled: false,
             motdInterval: 5,
             motd: 'Temporary Message of the Day',
+            filterChat: false,
             etaRestriction: false,
             welcome: true,
             opLink: null,
@@ -1228,7 +1229,7 @@
                     }
                 }
                 if (basicBot.chatcleaner(chat)) {
-                    
+                    API.moderateDeleteChat(chat.cid);
                     return true;
                 }
                 if (basicBot.settings.cmdDeletion && msg.startsWith(basicBot.settings.commandLiteral)) {
