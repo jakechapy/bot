@@ -1229,7 +1229,7 @@
                     }
                 }
                 if (basicBot.chatcleaner(chat)) {
-                    API.moderateDeleteChat(chat.cid);
+                  
                     return true;
                 }
                 if (basicBot.settings.cmdDeletion && msg.startsWith(basicBot.settings.commandLiteral)) {
